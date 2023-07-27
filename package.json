@@ -1,0 +1,6 @@
+{
+    "scripts": {
+        "test": "newman run Herokuapp.postman_collection.json",
+        "test-report": "newman run Herokuapp.postman_collection.json --reporters htmlextra"
+    }
+}

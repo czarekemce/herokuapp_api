@@ -1,0 +1,494 @@
+{
+	"info": {
+		"_postman_id": "88813908-bb8a-41c8-9510-c0bbe9fc2c92",
+		"name": "Herokuapp",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "28798729"
+	},
+	"item": [
+		{
+			"name": "AuthToken",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code should be 200\", () => {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test('Add token to env variables', () => {\r",
+							"    const response = pm.response.json();\r",
+							"    pm.environment.set(\"tokenValue\", response.token)\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.environment.clear()"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\" : \"admin\",\r\n    \"password\" : \"password123\"\r\n}"
+				},
+				"url": {
+					"raw": "{{BasicUrl}}{{AuthUrl}}",
+					"host": [
+						"{{BasicUrl}}{{AuthUrl}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetID",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code should be 200\", () => {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test('Add id to variables', () => {\r",
+							"    const response = pm.response.json();\r",
+							"    pm.environment.set(\"bookingID\", response[0].bookingid)\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{BasicUrl}}{{BookingUrl}}",
+					"host": [
+						"{{BasicUrl}}{{BookingUrl}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetBooking",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code should be 200\", () => {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test('Check types of expected values', () => {\r",
+							"    const response = pm.response.json();\r",
+							"    pm.expect(response.firstname).to.be.a('string')\r",
+							"    pm.expect(response.lastname).to.be.a('string')\r",
+							"    pm.expect(response.totalprice).to.be.a('number')\r",
+							"    pm.expect(response.depositpaid).to.be.a('boolean')\r",
+							"    pm.expect(response.bookingdates).to.be.a('object')\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{BasicUrl}}{{BookingUrl}}/{{bookingID}}",
+					"host": [
+						"{{BasicUrl}}{{BookingUrl}}"
+					],
+					"path": [
+						"{{bookingID}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "CreateBooking",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code should be 200\", () => {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test('Add created values to env variables', () => {\r",
+							"    const response = pm.response.json();\r",
+							"    pm.environment.set('createNewBookingID', response.bookingid)\r",
+							"    pm.environment.set(\"bookingName\", response.booking.firstname)\r",
+							"    pm.environment.set('bookingLastname', response.booking.lastname)\r",
+							"    pm.environment.set('bookingPrice', response.booking.totalprice)\r",
+							"    pm.environment.set('bookingDepositpaid', response.booking.depositpaid)\r",
+							"    pm.environment.set('bookingCheckin', response.booking.bookingdates.checkin)\r",
+							"    pm.environment.set('bookingCheckout', response.booking.bookingdates.checkout)\r",
+							"    pm.environment.set('bookingAdditionalneeds', response.booking.additionalneeds)\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"firstname\": \"Mr\",\r\n    \"lastname\": \"Smith\",\r\n    \"totalprice\": 111,\r\n    \"depositpaid\": true,\r\n    \"bookingdates\": {\r\n        \"checkin\": \"2018-01-01\",\r\n        \"checkout\": \"2019-01-01\"\r\n    },\r\n    \"additionalneeds\": \"Dinner\"\r\n}"
+				},
+				"url": {
+					"raw": "{{BasicUrl}}{{BookingUrl}}",
+					"host": [
+						"{{BasicUrl}}{{BookingUrl}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "UpdateBooking1",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code should be 200\", () => {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test('Update with the same values', () => {\r",
+							"    const response = pm.response.json();\r",
+							"    pm.environment.set(\"theSameBookingName\", response.firstname)\r",
+							"    pm.environment.set('theSameBookingLastname', response.lastname)\r",
+							"    pm.environment.set('theSameBookingPrice', response.totalprice)\r",
+							"    pm.environment.set('theSameBookingDepositpaid', response.depositpaid)\r",
+							"    pm.environment.set('theSameBookingCheckin', response.bookingdates.checkin)\r",
+							"    pm.environment.set('theSameBookingCheckout', response.bookingdates.checkout)\r",
+							"    pm.environment.set('theSameBookingAdditionalneeds', response.additionalneeds)\r",
+							"});\r",
+							" \r",
+							"pm.test('Check if updated values are the same', () => {\r",
+							"    pm.expect(pm.environment.get('bookingName')).to.equal(pm.environment.get(\"theSameBookingName\"))\r",
+							"    pm.expect(pm.environment.get('bookingLastname')).to.equal(pm.environment.get(\"theSameBookingLastname\"))\r",
+							"    pm.expect(pm.environment.get('bookingPrice')).to.equal(pm.environment.get(\"theSameBookingPrice\"))\r",
+							"    pm.expect(pm.environment.get('bookingDepositpaid')).to.equal(pm.environment.get(\"theSameBookingDepositpaid\"))\r",
+							"    pm.expect(pm.environment.get('bookingCheckin')).to.equal(pm.environment.get(\"theSameBookingCheckin\"))\r",
+							"    pm.expect(pm.environment.get('bookingCheckout')).to.equal(pm.environment.get(\"theSameBookingCheckout\"))\r",
+							"    pm.expect(pm.environment.get('bookingAdditionalneeds')).to.equal(pm.environment.get(\"theSameBookingAdditionalneeds\"))\r",
+							"});\r",
+							"\r",
+							"pm.test('Remove variables from Test Env', () => {\r",
+							"    pm.environment.unset(\"theSameBookingName\");\r",
+							"    pm.environment.unset(\"theSameBookingLastname\");\r",
+							"    pm.environment.unset(\"theSameBookingPrice\");\r",
+							"    pm.environment.unset(\"theSameBookingDepositpaid\");\r",
+							"    pm.environment.unset(\"theSameBookingCheckin\");\r",
+							"    pm.environment.unset(\"theSameBookingCheckout\");\r",
+							"    pm.environment.unset(\"theSameBookingAdditionalneeds\")\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Cookie",
+						"value": "token={{tokenValue}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"firstname\": \"Mr\",\r\n    \"lastname\": \"Smith\",\r\n    \"totalprice\": 111,\r\n    \"depositpaid\": true,\r\n    \"bookingdates\": {\r\n        \"checkin\": \"2018-01-01\",\r\n        \"checkout\": \"2019-01-01\"\r\n    },\r\n    \"additionalneeds\": \"Dinner\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BasicUrl}}{{BookingUrl}}/{{createNewBookingID}}",
+					"host": [
+						"{{BasicUrl}}{{BookingUrl}}"
+					],
+					"path": [
+						"{{createNewBookingID}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "UpdateBooking2",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", () => {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test('Update with different values', () => {\r",
+							"    const response = pm.response.json();\r",
+							"    pm.environment.set(\"updatedBookingName\", response.firstname)\r",
+							"    pm.environment.set('updatedBookingLastname', response.lastname)\r",
+							"    pm.environment.set('updatedBookingPrice', response.totalprice)\r",
+							"    pm.environment.set('updatedBookingDepositpaid', response.depositpaid)\r",
+							"    pm.environment.set('updatedBookingCheckin', response.bookingdates.checkin)\r",
+							"    pm.environment.set('updatedBookingCheckout', response.bookingdates.checkout)\r",
+							"    pm.environment.set('updatedBookingAdditionalneeds', response.additionalneeds)\r",
+							"});\r",
+							"\r",
+							"pm.test('Check if updated values are not equal', () => {\r",
+							"    pm.expect(pm.environment.get('bookingName')).to.not.equal(pm.environment.get(\"updatedBookingName\"))\r",
+							"    pm.expect(pm.environment.get('bookingLastname')).to.not.equal(pm.environment.get(\"updatedBookingLastname\"))\r",
+							"    pm.expect(pm.environment.get('bookingPrice')).to.not.equal(pm.environment.get(\"updatedBookingPrice\"))\r",
+							"    pm.expect(pm.environment.get('bookingDepositpaid')).to.not.equal(pm.environment.get(\"updatedBookingDepositpaid\"))\r",
+							"    pm.expect(pm.environment.get('bookingCheckin')).to.not.equal(pm.environment.get(\"updatedBookingCheckin\"))\r",
+							"    pm.expect(pm.environment.get('bookingCheckout')).to.not.equal(pm.environment.get(\"updatedBookingCheckout\"))\r",
+							"    pm.expect(pm.environment.get('bookingAdditionalneeds')).to.not.equal(pm.environment.get(\"updatedBookingAdditionalneeds\"))\r",
+							"});\r",
+							"\r",
+							"pm.test('Remove variables from Test Env', () => {\r",
+							"    pm.environment.unset(\"updatedBookingName\");\r",
+							"    pm.environment.unset(\"updatedBookingLastname\");\r",
+							"    pm.environment.unset(\"updatedBookingPrice\");\r",
+							"    pm.environment.unset(\"updatedBookingDepositpaid\");\r",
+							"    pm.environment.unset(\"updatedBookingCheckin\");\r",
+							"    pm.environment.unset(\"updatedBookingCheckout\");\r",
+							"    pm.environment.unset(\"updatedBookingAdditionalneeds\")\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Cookie",
+						"value": "token={{tokenValue}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"firstname\": \"Test name\",\r\n    \"lastname\": \"Test lastname\",\r\n    \"totalprice\": \"999\",\r\n    \"depositpaid\": false,\r\n    \"bookingdates\": {\r\n        \"checkin\": \"2023-12-30\",\r\n        \"checkout\": \"2024-12-30\"\r\n    },\r\n    \"additionalneeds\": \"Evening meal\"\r\n}"
+				},
+				"url": {
+					"raw": "{{BasicUrl}}{{BookingUrl}}/{{createNewBookingID}}",
+					"host": [
+						"{{BasicUrl}}{{BookingUrl}}"
+					],
+					"path": [
+						"{{createNewBookingID}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "UpdateBooking3",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Update with only one value, response should be 403\", () => {\r",
+							"    pm.response.to.have.status(403);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"firstname\": \"One-time test name\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BasicUrl}}{{BookingUrl}}/{{bookingID}}",
+					"host": [
+						"{{BasicUrl}}{{BookingUrl}}"
+					],
+					"path": [
+						"{{bookingID}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "UpdateBooking4",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code 404\", () => {\r",
+							"    pm.response.to.have.status(403)\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.test('Update with wrong bookingID', () => {\r",
+							"    pm.environment.set(\"failBookingID\", \"1234567\");\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n\"bookingid\": {{failBookingID}},\r\n\"booking\": {\r\n    \"firstname\": \"Test name\",\r\n    \"lastname\": \"Test lastname\",\r\n    \"totalprice\": \"999\",\r\n    \"depositpaid\": false,\r\n    \"bookingdates\": {\r\n        \"checkin\": \"2023-12-30\",\r\n        \"checkout\": \"2024-12-30\"\r\n    },\r\n    \"additionalneeds\": \"Evening meal\"\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BasicUrl}}{{BookingUrl}}/{{failBookingID}}",
+					"host": [
+						"{{BasicUrl}}{{BookingUrl}}"
+					],
+					"path": [
+						"{{failBookingID}}"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "430d63f492298f3",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "BasicUrl",
+			"value": "https://restful-booker.herokuapp.com/",
+			"type": "string"
+		},
+		{
+			"key": "AuthUrl",
+			"value": "auth",
+			"type": "string"
+		},
+		{
+			"key": "BookingUrl",
+			"value": "booking",
+			"type": "string"
+		}
+	]
+}
