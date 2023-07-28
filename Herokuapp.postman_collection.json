@@ -186,7 +186,7 @@
 			"response": []
 		},
 		{
-			"name": "UpdateBooking1",
+			"name": "UpdateBookingWithTheSameValues",
 			"event": [
 				{
 					"listen": "test",
@@ -272,7 +272,7 @@
 			"response": []
 		},
 		{
-			"name": "UpdateBooking2",
+			"name": "UpdateBookingWithDifferentValues",
 			"event": [
 				{
 					"listen": "test",
@@ -353,7 +353,7 @@
 			"response": []
 		},
 		{
-			"name": "UpdateBooking3",
+			"name": "UpdateBookingWithOneValue",
 			"event": [
 				{
 					"listen": "test",
@@ -393,13 +393,13 @@
 			"response": []
 		},
 		{
-			"name": "UpdateBooking4",
+			"name": "UpdateBookingWithWrongBookingID",
 			"event": [
 				{
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Status code 404\", () => {\r",
+							"pm.test(\"Update with wrong bookingID, response should be 404\", () => {\r",
 							"    pm.response.to.have.status(403)\r",
 							"});"
 						],
